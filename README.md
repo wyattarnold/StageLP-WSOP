@@ -1,4 +1,4 @@
-# Water Supply Portfolio Optimization with a Multi-stage Stochastic Mixed-Integer Linear Programming
+# Water Supply Portfolio Optimization with Multi-stage Stochastic Mixed-Integer Linear Programming
 
 Requires: 
 - [Pyomo](https://github.com/Pyomo/pyomo)
