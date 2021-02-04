@@ -4,8 +4,8 @@ set ST := RESTRICT EX_OPTION SPOT ;
 
 set SHORTAGE := SH ;
 
-param LT_MAX := LSRETRO     180 
-                OPTION      10
+param LT_MAX := LSRETRO     360 
+                OPTION      1000000
                 S_REC       1000
                 L_REC       100
                 S_DESAL     10
@@ -14,7 +14,7 @@ param LT_MAX := LSRETRO     180
                 L_GWR       5 ;
 
 param LT_QF := LSRETRO      1000
-               OPTION       10000
+               OPTION       0
                S_REC        250
                L_REC        10000
                S_DESAL      1000
@@ -23,7 +23,7 @@ param LT_QF := LSRETRO      1000
                L_GWR        10000 ;
 
 param C_LT := LSRETRO       550000 
-              OPTION        200000
+              OPTION        20
               S_REC         575000
               L_REC         18000000
               S_DESAL       2800000
@@ -32,10 +32,9 @@ param C_LT := LSRETRO       550000
               L_GWR         11000000 ;
 
 param ST_MAX := RESTRICT    180000 
-                EX_OPTION   100000
+                EX_OPTION   1000000
                 SPOT        50000 ;
-
 
 param C_ST := RESTRICT    300 
               EX_OPTION   120
-              SPOT        800 ;
+              SPOT        600 ;

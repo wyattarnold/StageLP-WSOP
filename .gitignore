@@ -1,5 +1,6 @@
 # custom
 *.code-workspace
+*.vscode
 *.DS_Store
 /Farmer
 Project*

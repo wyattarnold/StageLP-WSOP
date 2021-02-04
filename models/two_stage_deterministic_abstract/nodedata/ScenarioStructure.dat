@@ -7,51 +7,39 @@ set Nodes := RootNode
              S1Node 
              S2Node
              S3Node
-             S4Node
-             S5Node
-             S6Node ;
+             S4Node ;
 
 param NodeStage := RootNode             FirstStage 
                    NoShortageNode       SecondStage
                    S1Node               SecondStage 
                    S2Node               SecondStage
                    S3Node               SecondStage 
-                   S4Node               SecondStage
-                   S5Node               SecondStage 
-                   S6Node               SecondStage ;
+                   S4Node               SecondStage ;
 
 set Children[RootNode] := NoShortageNode
                           S1Node 
                           S2Node
                           S3Node
-                          S4Node
-                          S5Node
-                          S6Node ;
+                          S4Node ;
 
 param ConditionalProbability := RootNode        1.0
-                                NoShortageNode  0.4408 
-                                S1Node          0.0392 
-                                S2Node          0.1275
-                                S3Node          0.1863
-                                S4Node          0.1078
-                                S5Node          0.0784
-                                S6Node          0.0200 ;
+                                NoShortageNode  0.44
+                                S1Node          0.08 
+                                S2Node          0.24
+                                S3Node          0.16
+                                S4Node          0.08 ;
 
 set Scenarios := NoShortageScenario
                  S1Scenario 
                  S2Scenario
                  S3Scenario
-                 S4Scenario
-                 S5Scenario
-                 S6Scenario ;
+                 S4Scenario ;
 
 param ScenarioLeafNode := NoShortageScenario    NoShortageNode
                           S1Scenario            S1Node
                           S2Scenario            S2Node
                           S3Scenario            S3Node
-                          S4Scenario            S4Node
-                          S5Scenario            S5Node
-                          S6Scenario            S6Node ;
+                          S4Scenario            S4Node ;
 
 set StageVariables[FirstStage] :=  LT_ACTION[*] ;
 set StageVariables[SecondStage] := ST_Q[*] ;
