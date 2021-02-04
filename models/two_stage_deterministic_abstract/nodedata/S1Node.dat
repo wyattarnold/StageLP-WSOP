@@ -1,0 +1,4 @@
+# shortage level 1
+
+param SHORTAGE_Q := SH 137500 ;
+

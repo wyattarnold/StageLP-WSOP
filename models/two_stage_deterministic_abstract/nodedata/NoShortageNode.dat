@@ -1,0 +1,5 @@
+# no shortage
+
+param SHORTAGE_Q := SH 0.0 ;
+
+

@@ -1,6 +1,8 @@
 # custom
 *.code-workspace
 *.DS_Store
+/Farmer
+Project*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
