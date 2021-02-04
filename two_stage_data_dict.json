@@ -1,0 +1,61 @@
+{
+    "LT_MAX":{
+        "LS_RETRO":180,
+        "OPTION":10,
+        "S_REC":1000,
+        "L_REC":100,
+        "S_DESAL":10,
+        "L_DESAL":50,
+        "S_GWR":20,
+        "L_GWR":5
+    },
+    "LT_QF": {
+        "LS_RETRO":1000,
+        "OPTION":10000,
+        "S_REC":250,
+        "L_REC":10000,
+        "S_DESAL":1000,
+        "L_DESAL":20000,
+        "S_GWR":1000,
+        "L_GWR":10000
+    },
+    "C_LT": {
+        "LS_RETRO":550000,
+        "OPTION":200000,
+        "S_REC":575000,
+        "L_REC":18000000,
+        "S_DESAL":2800000,
+        "L_DESAL":42000000,
+        "S_GWR":1600000,
+        "L_GWR":11000000
+    },
+    "ST_MAX": {
+        "LS_RESTRICT":180000,
+        "EX_OPTION":100000,
+        "SPOT":50000
+    },
+    "C_ST": {
+        "LS_RESTRICT":300,
+        "EX_OPTION":120,
+        "SPOT":800
+    },
+    "SHORTAGE_Q": {
+        "NoShortage":{"SH":0},
+        "S1": {"SH":137500},
+        "S2": {"SH":412500},
+        "S3": {"SH":687500},
+        "S4": {"SH":962500},
+        "S5": {"SH":1237500},
+        "S6": {"SH":1512500}
+    },
+    "SHORTAGE_P": {
+        "NoShortage":0.4408,
+        "S1":0.0392,
+        "S2":0.1275,
+        "S3":0.1863,
+        "S4":0.1078,
+        "S5":0.0784,
+        "S6":0.0200
+
+    }
+}
