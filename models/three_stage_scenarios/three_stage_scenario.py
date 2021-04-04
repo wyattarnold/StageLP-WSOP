@@ -11,7 +11,7 @@
 # Imports
 #
 
-import json
+import os,json
 import networkx 
 import pyomo.environ as pyo
 
@@ -25,7 +25,8 @@ model = pyo.ConcreteModel()
 # Parameters
 #
 
-with open('two_stage_scenario_data_dict.json') as f:
+with open(os.path.join(os.path.dirname(__file__),
+          'three_stage_scenario_data_dict.json')) as f:
   data = json.load(f)
 
 model.LT = pyo.Set(initialize=list(data['LT_MAX'].keys()))
@@ -39,6 +40,8 @@ model.C_LT = data['C_LT']
 model.MT = pyo.Set(initialize=list(data['MT_MAX'].keys()))
 
 model.MT_MAX = data['MT_MAX']
+
+model.C_MT = data['C_MT']
 
 model.ST = pyo.Set(initialize=list(data['ST_MAX'].keys()))
 
@@ -61,9 +64,9 @@ model.LT_ACTION = pyo.Var(model.LT,
                           bounds=(0, None), 
                           within=pyo.NonNegativeIntegers)
 
-model.MT_ACTION = pyo.Var(model.MT, 
-                          bounds=(0, None), 
-                          within=pyo.NonNegativeIntegers)
+model.MT_EXP = pyo.Var(model.MT, 
+                          bounds=(0, 1), 
+                          within=pyo.PercentFraction)
 
 model.ST_Q = pyo.Var(model.ST, 
                      bounds=(0, None),
@@ -74,33 +77,52 @@ model.ST_Q = pyo.Var(model.ST,
 #
 
 def MeetShortage_rule(model):
-    st_q = pyo.quicksum(model.ST_Q[j] for j in model.ST)
-    return pyo.sum_product(model.LT_QF, model.LT_ACTION) + st_q >= model.SHORTAGE_Q['SH']
+    lt_q = pyo.sum_product(model.LT_QF, model.LT_ACTION)
+    mt_q = pyo.quicksum(model.LT_QF[i]*model.LT_ACTION[i]*model.MT_EXP[i] for i in model.LT)
+    st_q = pyo.quicksum(model.ST_Q[k] for k in model.ST)
+    tot_q = lt_q + mt_q + st_q
+    return  tot_q >= model.SHORTAGE_Q['SH']
 model.MeetShortage = pyo.Constraint(rule=MeetShortage_rule)
 
 def LongTermMax_rule(model, i):
     return model.LT_ACTION[i] <= model.LT_MAX[i]
 model.LongTermMax = pyo.Constraint(model.LT, rule=LongTermMax_rule)
 
-def MidTermMax_rule(model, i):
-    return model.MT_ACTION[i] <= model.MT_MAX[i]
+def MidTermMax_rule(model, j):
+    return model.MT_EXP[j] <= model.MT_MAX[j]
 model.MidTermMax = pyo.Constraint(model.MT, rule=MidTermMax_rule)
 
-def ShortTermMax_rule(model, j):
-    return model.ST_Q[j] <= model.ST_MAX[j]
+def MidTermLSRetro_rule(model):
+    lt_retro = model.LT_ACTION['LS_RETRO']
+    return lt_retro * model.MT_EXP['LS_RETRO'] + lt_retro <= model.LT_MAX['LS_RETRO']
+model.MidTermLSRetro = pyo.Constraint(rule=MidTermLSRetro_rule)
+
+def ShortTermMax_rule(model, k):
+    return model.ST_Q[k] <= model.ST_MAX[k]
 model.ShortTermMax = pyo.Constraint(model.ST, rule=ShortTermMax_rule)
 
 def ShortTermRestrict_rule(model):
-    return model.ST_Q['LS_RESTRICT'] <= model.LT_MAX['LS_RETRO'] - model.LT_ACTION['LS_RETRO']
+    lt_retro = model.LT_ACTION['LS_RETRO']
+    st_q_ = model.ST_Q['LS_RESTRICT'] / model.LT_QF['LS_RETRO']
+    return st_q_ + lt_retro * model.MT_EXP['LS_RETRO'] + lt_retro  <= model.LT_MAX['LS_RETRO']
 model.ShortTermRestrict = pyo.Constraint(rule=ShortTermRestrict_rule)
 
-def ShortTermOption_rule(model):
-    return model.ST_Q['EX_OPTION'] <= model.LT_ACTION['OPTION']
-model.ShortTermOption = pyo.Constraint(rule=ShortTermOption_rule)
+def LTOption_rule(model):
+    return model.ST_Q['EX_LT_OPTION'] <= model.LT_ACTION['OPTION']
+model.LTOption = pyo.Constraint(rule=LTOption_rule)
 
-def ShortTermNonNegativity_rule(model, j):
-    return model.ST_Q[j] >= 0 
+def MTOption_rule(model):
+    mt_option = model.LT_ACTION['OPTION'] * model.MT_EXP['OPTION']
+    return model.ST_Q['EX_MT_OPTION'] <= mt_option
+model.MTOption = pyo.Constraint(rule=MTOption_rule)
+
+def ShortTermNonNegativity_rule(model, k):
+    return model.ST_Q[k] >= 0 
 model.ShortTermNonNegativity = pyo.Constraint(model.ST, rule=ShortTermNonNegativity_rule)
+
+def MidTermNonNegativity_rule(model, j):
+    return model.MT_EXP[j] >= 0 
+model.MidTermNonNegativity = pyo.Constraint(model.MT, rule=MidTermNonNegativity_rule)
 
 def LongTermNonNegativity_rule(model, i):
     return model.LT_ACTION[i] >= 0
@@ -112,29 +134,33 @@ model.LongTermNonNegativity = pyo.Constraint(model.LT, rule=LongTermNonNegativit
 
 def ComputeFirstStageCost_rule(model):
     return pyo.sum_product(model.C_LT, model.LT_ACTION)
-
 model.FirstStageCost = pyo.Expression(rule=ComputeFirstStageCost_rule)
 
 def ComputeSecondStageCost_rule(model):
-    return pyo.sum_product(model.C_ST, model.ST_Q)
-
+    return pyo.quicksum(model.C_MT[i]*model.MT_EXP[i]*model.LT_ACTION[i]*model.LT_QF[i] for i in model.LT) + pyo.quicksum(1000*model.MT_EXP[i] for i in model.LT)
 model.SecondStageCost = pyo.Expression(rule=ComputeSecondStageCost_rule)
+
+def ComputeThirdStageCost_rule(model):
+    return pyo.sum_product(model.C_ST, model.ST_Q)
+model.ThirdStageCost = pyo.Expression(rule=ComputeThirdStageCost_rule)
 
 #
 # minimize: sum of StageCosts
 #
 
-StageSet = pyo.RangeSet(2)
+StageSet = pyo.RangeSet(3)
 def cost_rule(m, stage):
     # Just assign the expressions to the right stage
     if stage == 1:
         return model.FirstStageCost
     if stage == 2:
         return model.SecondStageCost
+    if stage == 3:
+        return model.ThirdStageCost
 model.CostExpressions = pyo.Expression(StageSet, rule=cost_rule)
 
 def total_cost_rule(model):
-    return model.FirstStageCost + model.SecondStageCost
+    return model.FirstStageCost + model.SecondStageCost + model.ThirdStageCost
 model.Total_Cost_Objective = pyo.Objective(rule=total_cost_rule, sense=pyo.minimize)
 
 #
@@ -163,6 +189,7 @@ def pysp_scenario_tree_model_callback():
 
     ce1 = "CostExpressions[1]"
     ce2 = "CostExpressions[2]"
+    ce3 = "CostExpressions[3]"
 
     g.add_node("Root",
                cost = ce1,
@@ -173,14 +200,14 @@ def pysp_scenario_tree_model_callback():
 
         g.add_node(projection,
                     cost = ce2,
-                    variables = ["MT_ACTION[*]"],
+                    variables = ["MT_EXP[*]"],
                     derived_variables = [])
         g.add_edge("Root", projection, weight=data['PROJECTION_P'][projection])
 
         for shortage in data['SHORTAGE_P'][projection]:
 
             g.add_node(shortage,
-                    cost = ce2,
+                    cost = ce3,
                     variables = ["ST_Q[*]"],
                     derived_variables = [])
             g.add_edge(projection, shortage, weight=data['SHORTAGE_P'][projection][shortage])

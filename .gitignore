@@ -2,8 +2,11 @@
 *.code-workspace
 *.vscode
 *.DS_Store
+pysp-run-help.md
 /Farmer
 Project*
+Stage-WSOP*
+*.pptx
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

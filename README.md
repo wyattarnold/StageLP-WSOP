@@ -10,16 +10,15 @@ Solver(s):
 Two-stage stochastic programming with Pyomo's [PySP](https://pyomo.readthedocs.io/en/stable/modeling_extensions/pysp.html) modeling extension.
 
 ## Run
-Run abstract model [/models/two_stage_deterministic_abstract](./models/two_stage_deterministic_abstract) with data defined in node/scenario files: 
+Run two-stage model [/models/two_stage_deterministic](./models/two_stage_deterministic):
 ```bash
-runph --model=two_stage_deterministic.py --solver=gurobi --instance-directory=nodedata --default-rho=1 --solution-writer=pyomo.pysp.plugins.csvsolutionwriter --termdiff-threshold=0.01 --max-iterations=20
+runef --solve -m=two_stage_concrete.py --solver=gurobi --solution-writer=pyomo.pysp.plugins.csvsolutionwriter 
 ```
 
-Run concrete model [/models/two_stage_deterministic](./models/two_stage_deterministic) with data defined in a json:
+Run three-stage model [/models/three_stage_scenarios](./models/three_stage_scenarios):
 ```bash
-runph --model=two_stage_concrete.py --solver=gurobi --default-rho=1 --solution-writer=pyomo.pysp.plugins.csvsolutionwriter --termdiff-threshold=0.01 --max-iterations=20
+runef --solve -m=three_stage_scenario.py --solver=gurobi  --solver-options="NonConvex=2" --solution-writer=pyomo.pysp.plugins.csvsolutionwriter
 ```
-
 
 ## References
 Lund, J. R. (1995). Derived Estimation of Willingness to Pay to Avoid Probabilistic Shortage. Water Resources Research, 31(5), 1367–1372.

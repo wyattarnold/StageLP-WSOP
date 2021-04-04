@@ -1,7 +1,7 @@
 {
     "LT_MAX":{
-        "LS_RETRO":360,
-        "OPTION":1000000,
+        "LS_RETRO":180,
+        "OPTION":200000,
         "S_REC":1000,
         "L_REC":100,
         "S_DESAL":10,
@@ -20,7 +20,7 @@
         "L_GWR":10000
     },
     "C_LT": {
-        "LS_RETRO":550000,
+        "LS_RETRO":450000,
         "OPTION":20,
         "S_REC":575000,
         "L_REC":18000000,
@@ -30,17 +30,36 @@
         "L_GWR":11000000
     },
     "MT_MAX":{
-        "NA":0
+        "LS_RETRO":0.0,
+        "OPTION":0.0,
+        "S_REC":0.2,
+        "L_REC":0.3,
+        "S_DESAL":0.2,
+        "L_DESAL":0.3,
+        "S_GWR":0.0,
+        "L_GWR":0.0
+    },
+    "C_MT": {
+        "LS_RETRO":585,
+        "OPTION":40,
+        "S_REC":2760,
+        "L_REC":1440,
+        "S_DESAL":3360,
+        "L_DESAL":1680,
+        "S_GWR":1920,
+        "L_GWR":880
     },
     "ST_MAX": {
         "LS_RESTRICT":180000,
-        "EX_OPTION":1000000,
-        "SPOT":500000
+        "EX_LT_OPTION":200000,
+        "EX_MT_OPTION":100000,
+        "SPOT":50000
     },
     "C_ST": {
-        "LS_RESTRICT":300,
-        "EX_OPTION":120,
-        "SPOT":600
+        "LS_RESTRICT":600,
+        "EX_LT_OPTION":120,
+        "EX_MT_OPTION":180,
+        "SPOT":800
     },
     "SHORTAGE_Q": {
         "P1":{
@@ -93,8 +112,8 @@
         }
     },
     "PROJECTION_P": {
-        "P1":0.05,
-        "P2":0.9,
-        "P3":0.05
+        "P1":0.9998,
+        "P2":0.0001,
+        "P3":0.0001
     }
 }

@@ -1,0 +1,10 @@
+Stage1, Root, NoShortage_P2, CostExpressions, 1, 1549000000.0
+Stage1, Root, S1_P2, CostExpressions, 1, 1549000000.0
+Stage1, Root, S2_P2, CostExpressions, 1, 1549000000.0
+Stage1, Root, S3_P2, CostExpressions, 1, 1549000000.0
+Stage1, Root, S4_P2, CostExpressions, 1, 1549000000.0
+Stage2, NoShortage_P2, NoShortage_P2, CostExpressions, 2, 0.0
+Stage2, S1_P2, S1_P2, CostExpressions, 2, 0.0
+Stage2, S2_P2, S2_P2, CostExpressions, 2, 0.0
+Stage2, S3_P2, S3_P2, CostExpressions, 2, 7200000.0
+Stage2, S4_P2, S4_P2, CostExpressions, 2, 126000000.0

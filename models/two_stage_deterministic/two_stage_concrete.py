@@ -11,7 +11,7 @@
 # Imports
 #
 
-import json
+import os, json, pickle
 import networkx 
 import pyomo.environ as pyo
 
@@ -25,7 +25,7 @@ model = pyo.ConcreteModel()
 # Parameters
 #
 
-with open('two_stage_data_dict.json') as f:
+with open(os.path.join(os.path.dirname(__file__),'two_stage_data_dict.json')) as f:
   data = json.load(f)
 
 model.LT = pyo.Set(initialize=list(data['LT_MAX'].keys()))
@@ -79,7 +79,7 @@ def ShortTermMax_rule(model, j):
 model.ShortTermMax = pyo.Constraint(model.ST, rule=ShortTermMax_rule)
 
 def ShortTermRestrict_rule(model):
-    return model.ST_Q['LS_RESTRICT'] <= model.LT_MAX['LS_RETRO'] - model.LT_ACTION['LS_RETRO']
+    return model.ST_Q['LS_RESTRICT'] <= model.LT_QF['LS_RETRO']*(model.LT_MAX['LS_RETRO'] - model.LT_ACTION['LS_RETRO'])
 model.ShortTermRestrict = pyo.Constraint(rule=ShortTermRestrict_rule)
 
 def ShortTermOption_rule(model):
