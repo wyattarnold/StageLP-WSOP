@@ -7,6 +7,7 @@ pysp-run-help.md
 Project*
 Stage-WSOP*
 *.pptx
+/notebooks
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
